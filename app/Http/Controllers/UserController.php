@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -17,16 +17,22 @@ class UserController extends Controller
     }
 
     public function agregarUsuario(Request $request)
-    {
+    {   
+        //Log::info($request);
+
         $request->validate([
             'email' => 'string|email',
         ]);
         $user = User::create([
+            'rut' => $request->rut,
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'estado' => 1,
             'intentos' => 3,
             'primera_guia' => 1,
+            'id_empresa' => $request->empresa,
         ]);
 
         $user->roles()->attach(1);

@@ -38,6 +38,10 @@ class EmpresaController extends Controller
             'id_admin' => $admin->id,
         ]);
 
+        // Actualizar el campo id_empresa del usuario
+        $admin->id_empresa = $empresa->id;
+        $admin->save();
+
         return response()->json([
             'message' => 'Empresa Creada'
         ], 200);
