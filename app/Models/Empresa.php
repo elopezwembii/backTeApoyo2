@@ -27,6 +27,12 @@ class Empresa extends Model
 
     public function getEncargado()
     {
-        return $this->hasMany(User::class, 'id','id_admin');
+        return $this->hasMany(User::class, 'id', 'id_admin');
+    }
+
+    public function getCantidadColaboradores()
+    {
+        // Obtén la cantidad de colaboradores asociados a la empresa
+        return $this->hasMany(User::class, 'id_empresa')->count();
     }
 }

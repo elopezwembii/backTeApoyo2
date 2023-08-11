@@ -75,7 +75,8 @@ class UserController extends Controller
 
     public function obtenerUsuarios()
     {
-        return response()->json(User::with('roles')->get(), 200);
+        return response()->json(User::with(['roles', 'empresa'])->get(), 200);
+
     }
 
     public function cambiarEstado(int $id)

@@ -99,4 +99,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ahorro::class, 'id_usuario');
     }
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa'); // Cambia "Empresa" al nombre de tu modelo de empresa
+    }
+    
 }
