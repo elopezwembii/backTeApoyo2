@@ -89,4 +89,12 @@ class UserController extends Controller
             'message' => 'usuario editado'
         ], 200);
     }
+    public function masiva(Request $request)
+    {
+        Log::info($request);
+
+        return response()->json([
+            'message' => 'ok!'
+        ], 200);
+    }
 }
