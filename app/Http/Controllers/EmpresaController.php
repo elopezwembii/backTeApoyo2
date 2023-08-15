@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmpresaController extends Controller
 {
@@ -15,14 +16,22 @@ class EmpresaController extends Controller
 
     public function crearEmpresaYEncargado(Request $request)
     {
+
+       // Log::info($request);
         $request->validate([
+            'rut' => 'required',
+            'nombres' => 'required',
+            'apellidos' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'nombre' => 'required',
+            'nombreEmpresa' => 'required',
             'cantidad_colaboradores' => 'required|numeric',
         ]);
 
         $admin = User::create([
+            'rut' => $request->rut,
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'estado' => 1,
@@ -32,7 +41,7 @@ class EmpresaController extends Controller
         $admin->roles()->attach(4);
 
         $empresa = Empresa::create([
-            'nombre' => $request->nombre,
+            'nombre' => $request->nombreEmpresa,
             'cantidad_colaboradores' => $request->cantidad_colaboradores,
             'estado' => 1,
             'id_admin' => $admin->id,
