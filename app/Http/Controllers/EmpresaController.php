@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Log;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class EmpresaController extends Controller
 {
