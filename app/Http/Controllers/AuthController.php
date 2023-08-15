@@ -54,7 +54,8 @@ class AuthController extends Controller
                 'message' => 'No autorizado'
             ], 401);
 
-        $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->with('empresa')->first();
+
         $tokenResult = $user->createToken("te-apoyo");
 
         $token = $tokenResult->token;

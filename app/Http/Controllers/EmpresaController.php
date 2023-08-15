@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,10 +24,12 @@ class EmpresaController extends Controller
             'nombres' => 'required',
             'apellidos' => 'required',
             'email' => 'required|email',
-            'password' => 'required',
             'nombreEmpresa' => 'required',
-            'cantidad_colaboradores' => 'required|numeric',
+            'password' => 'required',
+            'cantidad_colaboradores' => 'required|numeric'
         ]);
+
+        //Log::info($request);
 
         $admin = User::create([
             'rut' => $request->rut,
@@ -37,6 +40,9 @@ class EmpresaController extends Controller
             'estado' => 1,
             'intentos' => 3,
             'primera_guia' => 0,
+            'rut' => $request->rut, // Agregado: RUT
+            'nombres' => $request->nombres, // Agregado: Nombres
+            'apellidos' => $request->apellidos, // Agregado: Apellidos
         ]);
         $admin->roles()->attach(4);
 
@@ -54,5 +60,33 @@ class EmpresaController extends Controller
         return response()->json([
             'message' => 'Empresa Creada'
         ], 200);
+    }
+
+    public function getCantidadColaboradores(int $id, Request $request)
+    {
+        if (!is_null($id)) {
+            $empresa = Empresa::find($id);
+
+            if ($empresa) {
+                $cantidadColaboradores = $empresa->getCantidadColaboradores();
+
+                $cupoDisponible = false;
+                if ($cantidadColaboradores < $empresa->cantidad_colaboradores) {
+                    $cupoDisponible = true;
+                }
+
+                return response()->json([
+                    'limiteColaboradores' => $empresa->cantidad_colaboradores,
+                    'cantidadColaboradores' => $cantidadColaboradores,
+                    'cupoDisponible' => $cupoDisponible
+                ], 200);
+            } else {
+                // La empresa con el ID proporcionado no fue encontrada
+                return response()->json(['message' => 'Empresa no encontrada'], 404);
+            }
+        } else {
+            // El ID proporcionado es nulo
+            return response()->json(['message' => 'ID de empresa nulo'], 400);
+        }
     }
 }

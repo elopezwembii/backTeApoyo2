@@ -91,6 +91,7 @@ Route::group([
         //empresa
         Route::get('empresa', [EmpresaController::class, 'getEmpresas']);
         Route::post('empresa', [EmpresaController::class, 'crearEmpresaYEncargado']);
+        Route::get('empresa/{id}', [EmpresaController::class, 'getCantidadColaboradores']);
     });
 
     Route::get('/user', function (Request $request) {
