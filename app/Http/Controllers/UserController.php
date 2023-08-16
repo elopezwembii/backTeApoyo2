@@ -54,7 +54,7 @@ class UserController extends Controller
             'estado' => 1,
             'intentos' => 3,
             'primera_guia' => 1,
-            'id_empresa' => $request->empresa,
+            'id_empresa' => $request->empresa == -1 ? null : $request->empresa,
         ]);
 
         $user->roles()->attach(1);
