@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Log;
 
 class IngresoController extends Controller
 {
@@ -208,5 +209,21 @@ class IngresoController extends Controller
             $suma,
             200
         );
+    }
+    public function validarSiTieneIngreso(Request $request)
+    {
+        $ingresos = Ingreso::where('id_usuario', Auth::user()->id)->count();
+
+        Log::info($ingresos);
+
+        if ($ingresos > 0) {
+            return response()->json([
+                'tieneIngresos' => true
+            ], 200);
+        } else {
+            return response()->json([
+                'tieneIngresos' => false
+            ], 200);
+        }
     }
 }

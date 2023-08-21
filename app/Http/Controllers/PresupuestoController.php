@@ -157,4 +157,16 @@ class PresupuestoController extends Controller
             'message' => 'Item eliminado',
         ], 200);
     }
+
+    public function validarSiTienePresupuesto(Request $request)
+    {
+        $presupuestosConItems = Presupuesto::where('id_usuario', Auth::user()->id)
+            ->has('getItems')
+            ->count();
+    
+        return response()->json([
+            'tienePresupuesto' => $presupuestosConItems > 0
+        ], 200);
+    }
+    
 }

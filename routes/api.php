@@ -13,7 +13,7 @@ use App\Models\Ingreso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Log;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,6 +41,7 @@ Route::group([
         Route::get('total_variable', [IngresoController::class, 'getTotalVariableMes']);
         Route::post('ingreso/{id}', [IngresoController::class, 'editIngreso']);
         Route::delete('ingreso/{id}', [IngresoController::class, 'deleteIngreso']);
+        Route::get('validaSiTieneIngreso', [IngresoController::class, 'validarSiTieneIngreso']);
 
         //gastos
         Route::post('agregar_gasto', [GastoController::class, 'registerGasto']);
@@ -54,6 +55,7 @@ Route::group([
         Route::post('agregar_item_presupuesto', [PresupuestoController::class, 'agregarItem']);
         Route::post('mantener_presupuesto_mes_anterior', [PresupuestoController::class, 'replicaPresupuesto']);
         Route::delete('item_presupuesto/{id}', [PresupuestoController::class, 'eliminarItem']);
+        Route::get('validaSiTienePresupuesto', [PresupuestoController::class, 'validarSiTienePresupuesto']);
 
         //deuda
         Route::post('agregar_deuda', [DeudaController::class, 'registrarDeuda']);
