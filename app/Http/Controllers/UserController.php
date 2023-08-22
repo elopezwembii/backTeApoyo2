@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Empresa;
 use Exception;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -179,6 +179,17 @@ class UserController extends Controller
         } else {
             return response()->json(["success" => false, "message" => "Por favor, sube un archivo."]);
         }
+    }
+
+
+
+    public function getNivel()
+    {
+        $user = Auth::user();
+        
+        return response()->json([        
+            'nivel'=>$user->calcularNivel()
+        ]);
     }
     
 

@@ -90,6 +90,7 @@ Route::group([
         Route::post('usuarios', [UserController::class, 'agregarUsuario']);
         Route::get('usuarios/cambiar-perfil/{id}', [UserController::class, 'cambiarEstado']);
         Route::post('masiva', [UserController::class, 'masiva']);
+        Route::get('nivel', [UserController::class, 'getNivel']);
 
         //empresa
         Route::get('empresa', [EmpresaController::class, 'getEmpresas']);

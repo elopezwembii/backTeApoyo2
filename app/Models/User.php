@@ -114,9 +114,8 @@ class User extends Authenticatable
     public function calcularNivel()
     {
         $numAreasLlenas = 0;
-
+    
         if ($this->getIngresos()->count() > 0) {
-          
             $numAreasLlenas++;
         }
         if ($this->getPresupuestos()->count() > 0) {
@@ -126,19 +125,15 @@ class User extends Authenticatable
             }
         }
         if ($this->getDeudas()->count() > 0) {
-           
             $numAreasLlenas++;
         }
         if ($this->getAhorro()->count() > 0) {
-          
             $numAreasLlenas++;
         }
         if ($this->getGastos()->count() > 0) {
-          
             $numAreasLlenas++;
         }
-     
-
+    
         $niveles = [
             0 => 'Novato Financiero',
             1 => 'Money Rookie',
@@ -147,8 +142,24 @@ class User extends Authenticatable
             4 => 'Expert Saver',
             5 => 'Money Wizard',
         ];
-
-        return $niveles[$numAreasLlenas];
+    
+        $imagenesPorNivel = [
+            'Novato Financiero' => 'https://cdn-icons-png.flaticon.com/512/3830/3830723.png',
+            'Money Rookie' => 'https://cdn-icons-png.flaticon.com/512/2695/2695370.png',
+            'Budget Boss' => 'https://cdn-icons-png.flaticon.com/512/1903/1903251.png',
+            'Debt Manager' => 'https://cdn-icons-png.flaticon.com/512/6823/6823088.png',
+            'Expert Saver' => 'https://cdn-icons-png.flaticon.com/512/1141/1141454.png',
+            'Money Wizard' => 'https://cdn-icons-png.flaticon.com/512/2579/2579276.png',
+        ];
+    
+        $nivelActual = $niveles[$numAreasLlenas];
+        $imagenURL = $imagenesPorNivel[$nivelActual];
+    
+        return [
+            'nivel' => $nivelActual,
+            'imagen_url' => $imagenURL,
+        ];
     }
+    
     
 }
