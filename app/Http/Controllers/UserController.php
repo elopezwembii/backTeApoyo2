@@ -127,7 +127,7 @@ class UserController extends Controller
                 $spreadsheet = IOFactory::load($file->getPathname());
                 $worksheet = $spreadsheet->getActiveSheet();            
                 $highestRow = $worksheet->getHighestRow();
-
+                
                 for ($row = 2; $row <= 50; $row++) {//solo procesa hasta 50 filas
                     
                     $rut = $worksheet->getCell('A' . $row)->getValue();
@@ -139,7 +139,7 @@ class UserController extends Controller
                         break;
                     }
     
-                    $rut = $this->formatearRUT($rut);
+                   // $rut = $this->formatearRUT($rut);
                  
                     try {
                         $user = User::create([
