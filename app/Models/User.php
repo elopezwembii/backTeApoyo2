@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -103,6 +104,51 @@ class User extends Authenticatable
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'id_empresa'); // Cambia "Empresa" al nombre de tu modelo de empresa
+    }
+
+    public function getPresupuestos()
+    {
+        return $this->hasMany(Presupuesto::class, 'id_usuario');
+    }
+
+    public function calcularNivel()
+    {
+        $numAreasLlenas = 0;
+
+        if ($this->getIngresos()->count() > 0) {
+          
+            $numAreasLlenas++;
+        }
+        if ($this->getPresupuestos()->count() > 0) {
+            // Verificar si tiene al menos un ítem de presupuesto
+            if ($this->getPresupuestos()->whereHas('getItems')->count() > 0) {
+                $numAreasLlenas++;
+            }
+        }
+        if ($this->getDeudas()->count() > 0) {
+           
+            $numAreasLlenas++;
+        }
+        if ($this->getAhorro()->count() > 0) {
+          
+            $numAreasLlenas++;
+        }
+        if ($this->getGastos()->count() > 0) {
+          
+            $numAreasLlenas++;
+        }
+     
+
+        $niveles = [
+            0 => 'Novato Financiero',
+            1 => 'Money Rookie',
+            2 => 'Budget Boss',
+            3 => 'Debt Manager',
+            4 => 'Expert Saver',
+            5 => 'Money Wizard',
+        ];
+
+        return $niveles[$numAreasLlenas];
     }
     
 }

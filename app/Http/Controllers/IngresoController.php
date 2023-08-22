@@ -214,7 +214,7 @@ class IngresoController extends Controller
     {
         $ingresos = Ingreso::where('id_usuario', Auth::user()->id)->count();
 
-        Log::info($ingresos);
+    
 
         if ($ingresos > 0) {
             return response()->json([

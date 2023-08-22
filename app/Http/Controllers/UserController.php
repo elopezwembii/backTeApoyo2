@@ -40,7 +40,7 @@ class UserController extends Controller
 
     public function agregarUsuario(Request $request)
     {   
-        //Log::info($request);
+      
 
         $request->validate([
             'email' => 'string|email',
@@ -113,14 +113,14 @@ class UserController extends Controller
     }
     public function masiva(Request $request)
     {
-        log::info($request);
+       
         $errores = []; 
         
         $empresa_id = $request->input('empresa');
     
         if ($request->hasFile('archivo') && Empresa::find($empresa_id)) {
             $file = $request->file('archivo');
-            log::info($request);
+        
             
             if ($file->getMimeType() == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
                 

@@ -17,7 +17,7 @@ class EmpresaController extends Controller
     public function crearEmpresaYEncargado(Request $request)
     {
 
-       // Log::info($request);
+
         $request->validate([
             'rut' => 'required',
             'nombres' => 'required',
@@ -27,8 +27,6 @@ class EmpresaController extends Controller
             'password' => 'required',
             'cantidad_colaboradores' => 'required|numeric'
         ]);
-
-        //Log::info($request);
 
         $admin = User::create([
             'rut' => $request->rut,

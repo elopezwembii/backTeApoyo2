@@ -63,8 +63,7 @@ class AuthController extends Controller
             $token->expires_at = Carbon::now()->addWeeks(1);
         $token->save();
         
-        //Log::info( $user );
-        
+
 
         return response()->json([
             'access_token' => $tokenResult->accessToken,
@@ -72,6 +71,7 @@ class AuthController extends Controller
             'expires_at' => Carbon::parse($token->expires_at)->toDateTimeString(),
             'user' => $user,
             'rol' => $user->roles()->first(),
+            'nivel'=>$user->calcularNivel()
         ]);
     }
 }
