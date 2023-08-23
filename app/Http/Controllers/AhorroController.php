@@ -75,4 +75,29 @@ class AhorroController extends Controller
             ], 404);
         }
     }
+
+    public function actualizarMonto(int $id, Request $request)
+    {
+        $request->validate([
+            'recaudado' => 'required|numeric',
+        ]);
+    
+        $ahorro = Ahorro::where('id', $id)->first();
+    
+        if ($ahorro) {
+            // Sumar el valor actual de 'recaudado' con el valor enviado en la solicitud
+            $ahorro->recaudado += $request->recaudado;
+            $ahorro->save();
+    
+            return response()->json([
+                'message' => 'Monto del ahorro actualizado'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Ahorro no encontrado'
+            ], 404);
+        }
+    }
+    
+
 }

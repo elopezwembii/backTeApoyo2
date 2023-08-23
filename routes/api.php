@@ -45,6 +45,9 @@ Route::group([
 
         //gastos
         Route::post('agregar_gasto', [GastoController::class, 'registerGasto']);
+
+        Route::post('agregar_gasto_asociandoAhorro', [GastoController::class, 'registerGastoAsociandoAhorro']);
+
         Route::get('gastos_fijos', [GastoController::class, 'getGastoFijo']);
         Route::get('gastos_variables', [GastoController::class, 'getGastoVariable']);
         Route::post('gasto/{id}', [GastoController::class, 'editGasto']);
@@ -74,6 +77,9 @@ Route::group([
         Route::get('obtener_ahorro', [AhorroController::class, 'obtenerAhorros']);
         Route::delete('ahorro/{id}', [AhorroController::class, 'eliminarAhorro']);
         Route::post('ahorro/{id}', [AhorroController::class, 'editarAhorro']);
+
+       Route::put('ahorro/{id}/actualizar-monto', [AhorroController::class, 'actualizarMonto']);
+
 
         //bien
         Route::post('agregar_bien', [BienController::class, 'registrarBien']);

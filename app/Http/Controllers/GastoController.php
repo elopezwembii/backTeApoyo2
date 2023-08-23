@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gasto;
+use App\Models\Ahorro;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Log;
 class GastoController extends Controller
 {
     public function registerGasto(Request $request)
@@ -35,6 +37,38 @@ class GastoController extends Controller
             200
         );
     }
+
+
+    public function registerGastoAsociandoAhorro(Request $request)
+    {
+        Log::info('carro'.$request->idAhorro);
+        $request->validate([
+            'monto' => 'required|numeric',
+            'fijar' => 'required|boolean',
+            'tipo_gasto' => 'required|numeric',
+            'subtipo_gasto' => 'required|numeric',
+            'idAhorro' => 'required|numeric',
+        ]);
+        $user = Auth::user();
+
+        $gasto = Gasto::create([
+            'desc' => $request->desc ? $request->desc : 'Gasto',
+            'monto' => $request->monto,
+            'dia' => $request->dia,
+            'mes' => $request->mes,
+            'anio' => $request->anio,
+            'fijar' => $request->fijar,
+            'id_usuario' => $user->id,
+            'tipo_gasto' => $request->tipo_gasto,
+            'subtipo_gasto' => $request->subtipo_gasto,
+            'ahorro_id'=>$request->idAhorro
+        ]);
+        return response()->json(
+            $gasto,
+            200
+        );
+    }
+
 
     public function editGasto(int $id, Request $request)
     {
@@ -104,7 +138,15 @@ class GastoController extends Controller
     public function deleteGasto(int $id)
     {
         $gasto = Gasto::where('id', $id)->first();
-        $gasto->delete();
+
+         $gasto->delete();
+
+        if($gasto->tipo_gasto===14){
+                    
+            $ahorro = Ahorro::where('id', $gasto->ahorro_id)->first();
+            $ahorro->recaudado -= $gasto->monto;
+            $ahorro->save();
+        }
 
         return response()->json([
             'message' => 'Gasto borrado'

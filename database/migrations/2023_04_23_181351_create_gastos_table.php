@@ -24,6 +24,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_usuario')->nullable();
             $table->unsignedBigInteger('tipo_gasto')->nullable();
             $table->unsignedBigInteger('subtipo_gasto')->nullable();
+
+            $table->unsignedBigInteger('ahorro_id')->nullable();
+
             $table->timestamps();
         });
     }
