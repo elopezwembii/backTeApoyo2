@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('email:test')->everyMinute();
         $schedule->command('database:backup')->daily();
+
+       // $schedule->command('email:send-monthly-notifications')->everyMinute();//monthlyOn(15, '08:00');
+
     }
 
     /**

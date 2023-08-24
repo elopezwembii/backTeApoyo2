@@ -23,6 +23,8 @@ class SendTestEmail extends Command
     public function handle()
     {
         $users = User::where('nombres', 'Mauricio')->get();
+
+        $usersAll=User::all();
     
         foreach ($users as $user) {
             $gastosTotal = $user->getGastos()->sum('monto');
