@@ -17,15 +17,17 @@ class TestEmail extends Mailable
     public $gastosTotal;
     public $itemsTotalPresupuestos;
     public $nombre;
+    public $mensaje;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($gastosTotal, $itemsTotalPresupuestos, $nombre)
+    public function __construct($gastosTotal, $itemsTotalPresupuestos, $nombre,$mensaje)
     {
         $this->gastosTotal = $gastosTotal;
         $this->itemsTotalPresupuestos = $itemsTotalPresupuestos;
         $this->nombre = $nombre;
+        $this->mensaje = $mensaje;
     }
 
     /**

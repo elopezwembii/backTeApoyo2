@@ -59,7 +59,7 @@
     <div class="container">
         <h1>Aviso Importante: Control de Gastos</h1>
         <p>Hola {{ $nombre }},</p>
-        <p>Te escribimos para informarte que hemos notado que tus gastos totales están llegando a la mitad del presupuesto establecido en tus categorías de gastos.</p>
+        <p>Te escribimos para informarte que hemos notado que tus {{$mensaje}} establecido en tus categorías de gastos.</p>
         <p>Detalles:</p>
         <ul>
             <li>Gastos Totales: ${{ number_format($gastosTotal, 2) }}</li>

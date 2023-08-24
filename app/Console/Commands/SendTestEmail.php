@@ -36,14 +36,16 @@ class SendTestEmail extends Command
     
             $porcentajeActual = ($gastosTotal / $itemsTotalPresupuestos) * 100;
             $umbralMinimo = 45; // Puedes ajustar este valor según lo que consideres "cercano al 50%"
-            Log::info($porcentajeActual);
+            $umbralMaximo80 = 85; // Umbral máximo para 80%
     
             if ($porcentajeActual >= $umbralMinimo && $porcentajeActual <= 55) {
                 // Envía el correo ya que los gastos están cerca del 50%
-                Mail::to("cesar.troncoso@ssantofagasta.cl")->send(new TestEmail($gastosTotal, $itemsTotalPresupuestos, $user->nombres));
-                Log::info('Correo de prueba enviado con éxito.');
-            } else {
-                Log::info('Gastos no están cerca del 50%.');
+                $mensaje = 'gastos totales están llegando a la mitad del presupuesto';
+                Mail::to("cesar.troncoso@ssantofagasta.cl")->send(new TestEmail($gastosTotal, $itemsTotalPresupuestos, $user->nombres,$mensaje));
+            } elseif ($porcentajeActual > 50 && $porcentajeActual <= $umbralMaximo80) {
+                // Envía el correo ya que los gastos están cerca del 80%
+                $mensaje = 'gastos totales están llegando a 80% del presupuesto';
+                Mail::to("cesar.troncoso@ssantofagasta.cl")->send(new TestEmail($gastosTotal, $itemsTotalPresupuestos, $user->nombres,$mensaje));
             }
         }
     }
