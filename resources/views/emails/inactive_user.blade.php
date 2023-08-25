@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recordatorio Mensual</title>
+    <title>Recordatorio de Inactividad</title>
     <style>
         /* Estilos generales */
         body {
@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
         }
         .container {
             max-width: 600px;
@@ -52,13 +53,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>¡Recordatorio Mensual!</h1>
-        <p>Hola {{ $nombre }},</p>
-        <p>Te recordamos que estamos a {{$mensaje}} y es un buen momento para completar tus registros en la plataforma.</p>
-        <p>Recuerda registrar tus ingresos, gastos, deudas, ahorros y cualquier otro detalle financiero para mantener un control efectivo de tus finanzas.</p>
-        <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en ponerte en contacto con nosotros.</p>
-        <p>¡Mantener tus registros actualizados te ayudará a tener un mayor control y orden en tus finanzas personales!</p>
-        <p>¡Gracias por confiar en nosotros para administrar tus finanzas!</p>
+        <h1>¡Hola, {{$nombre}}!</h1>
+        <p>Te extrañamos en nuestra plataforma. Parece que no has iniciado sesión en un tiempo.</p>
+        <p>Te animamos a volver a utilizar nuestros servicios y aprovechar al máximo todas sus características.</p>
+        <p>¡Esperamos verte pronto de nuevo!</p>
+        <p>Equipo de te apoyo</p>
     </div>
     <div class="footer">
         <p>Este es un correo de notificación automática. Por favor, no respondas a este correo.</p>

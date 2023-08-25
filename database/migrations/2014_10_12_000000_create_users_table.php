@@ -32,6 +32,8 @@ return new class extends Migration
             $table->date('suscripcion_inicio')->nullable();
             $table->date('suscripcion_fin')->nullable();
 
+            $table->date('last_login_at')->nullable();
+
             $table->integer('primera_guia');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
