@@ -25,4 +25,10 @@ class Ahorro extends Model
         'id_usuario',
     ];
 
+    public function gastos()
+{
+    return $this->hasMany(Gasto::class, 'ahorro_id');
 }
+
+}
+

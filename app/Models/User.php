@@ -155,11 +155,16 @@ class User extends Authenticatable
         $nivelActual = $niveles[$numAreasLlenas];
         $imagenURL = $imagenesPorNivel[$nivelActual];
     
+        // Calcular el siguiente nivel
+        $siguienteNivel = isset($niveles[$numAreasLlenas + 1]) ? $niveles[$numAreasLlenas + 1] : null;
+    
         return [
-            'nivel' => $nivelActual,
-            'imagen_url' => $imagenURL,
-        ];
+            'nivel_actual' => $nivelActual,
+            'imagen_url_actual' => $imagenURL,
+            'siguiente_nivel' => $siguienteNivel
+             ];
     }
+    
     
     
 }

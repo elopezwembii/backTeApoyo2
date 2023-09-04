@@ -44,12 +44,19 @@ class AhorroController extends Controller
 
     public function eliminarAhorro(int $id)
     {
-        $ahorro = Ahorro::where('id', $id)->first();
+        $ahorro = Ahorro::findOrFail($id);
+    
+        // Eliminar los gastos asociados al ahorro
+        $ahorro->gastos()->delete();
+    
+        // Eliminar el ahorro
         $ahorro->delete();
+    
         return response()->json([
-            'message' => 'ahorro borrado'
+            'message' => 'ahorro y gastos asociados borrados'
         ], 200);
     }
+    
 
     public function editarAhorro(int $id, Request $request)
     {
