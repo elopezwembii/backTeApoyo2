@@ -375,49 +375,49 @@ class DatabaseSeeder extends Seeder
         // ]);
 
 
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 101,
             'nombre' => 'Créditos de consumo',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 102,
             'nombre' => 'Crédito hipotecario',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 103,
             'nombre' => 'Casas comerciales',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 104,
             'nombre' => 'Crédito automotriz',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 105,
             'nombre' => 'Tarjeta de crédito',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 106,
             'nombre' => 'Línea de crédito',
             'created_at' => '2023-08-21 20:44:58',
             'updated_at' => '2023-08-21 20:44:58',
         ]);
         
-        SubtiposGasto::create([
+         \App\Models\Subtipos_gasto::create([
             'id' => 107,
             'nombre' => 'Otros pagos de créditos',
             'created_at' => '2023-08-21 20:44:58',
@@ -530,18 +530,49 @@ class DatabaseSeeder extends Seeder
             'id' => 1410
         ]);
 
-        \App\Models\Tipos_deuda::create([
+        // \App\Models\Tipos_deuda::create([
+        //     'nombre' => 'Crédito de consumo',
+        // ]);
+        // \App\Models\Tipos_deuda::create([
+        //     'nombre' => 'Crédito hipotecario',
+        // ]);
+        // \App\Models\Tipos_deuda::create([
+        //     'nombre' => 'Crédito automotriz',
+        // ]);
+        // \App\Models\Tipos_deuda::create([
+        //     'nombre' => 'Compras a crédito',
+        // ]);
+
+        // 'Créditos de consumo',
+        // 'Crédito hipotecario',
+        // 'Casas comerciales',
+        // 'Crédito automotriz',
+        // 'Tarjeta de crédito',
+        // 'Línea de crédito',
+        // 'Otros pagos de créditos'
+
+          \App\Models\Tipos_deuda::create([
             'nombre' => 'Crédito de consumo',
         ]);
         \App\Models\Tipos_deuda::create([
             'nombre' => 'Crédito hipotecario',
         ]);
         \App\Models\Tipos_deuda::create([
+            'nombre' => 'Casas comerciales',
+        ]);
+        \App\Models\Tipos_deuda::create([
             'nombre' => 'Crédito automotriz',
         ]);
         \App\Models\Tipos_deuda::create([
-            'nombre' => 'Compras a crédito',
+            'nombre' => 'Tarjeta a crédito',
         ]);
+        \App\Models\Tipos_deuda::create([
+            'nombre' => 'Línea de crédito',
+        ]);
+        \App\Models\Tipos_deuda::create([
+            'nombre' => 'Otros pagos de créditos',
+        ]);
+        //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
         \App\Models\Banco::create([
             'nombre' => 'Banco BBVA',

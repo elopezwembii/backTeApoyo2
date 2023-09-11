@@ -34,7 +34,7 @@ class Deuda extends Model
 
     public function gastos()
 {
-    return $this->hasMany(Gastos::class, 'deuda_id');
+    return $this->hasMany(Gasto::class, 'deuda_id');
 }
 
 }

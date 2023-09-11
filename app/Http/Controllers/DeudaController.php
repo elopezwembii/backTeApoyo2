@@ -52,6 +52,9 @@ class DeudaController extends Controller
     public function eliminarDeuda(int $id)
     {
         $deuda = Deuda::where('id', $id)->first();
+        // Eliminar los gastos asociados a la deuda
+        $deuda->gastos()->delete();
+        // Eliminar la deuda
         $deuda->delete();
         return response()->json([
             'message' => 'Deuda borrada'

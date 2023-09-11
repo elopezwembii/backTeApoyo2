@@ -42,7 +42,7 @@ class GastoController extends Controller
 
     public function registerGastoAsociandoAhorro(Request $request)
     {
-        Log::info('carro'.$request->idAhorro);
+      
         $request->validate([
             'monto' => 'required|numeric',
             'fijar' => 'required|boolean',
@@ -175,51 +175,56 @@ class GastoController extends Controller
     //     ], 200);
     // }
 
+ 
     public function editGasto(int $id, Request $request)
-    {
-        $request->validate([
-            'monto' => 'required|numeric',
-            'fijar' => 'required|boolean',
-            'tipo_gasto' => 'required|numeric',
-        ]);
-        $gasto = Gasto::where('id', $id)->first();
-    
-        // Guarda los montos originales del gasto antes de la edición
-        $montoOriginal = $gasto->monto;
-        $deudaIdOriginal = $gasto->deuda_id;
-        $ahorroIdOriginal = $gasto->ahorro_id;
-    
-        // ... El código de edición del gasto ...
-    
-        // Actualiza los montos de ahorro y deuda según los cambios
-        if ($ahorroIdOriginal !== null) {
-            $ahorro = Ahorro::where('id', $ahorroIdOriginal)->first();
-            $ahorro->recaudado -= $montoOriginal;
-            $ahorro->recaudado += $gasto->monto;
+{
+    $request->validate([
+        'monto' => 'required|numeric',
+        'fijar' => 'required|boolean',
+        'tipo_gasto' => 'required|numeric',
+    ]);
+
+    $gasto = Gasto::where('id', $id)->first();
+
+    if ($gasto) {
+        // Verificar si el gasto está asociado a una deuda
+        if (!is_null($gasto->deuda_id)) {
+           
+            // El gasto está asociado a una deuda, debemos actualizar esa relación
+            $deuda = Deuda::findOrFail($gasto->deuda_id);
+            // Realiza los ajustes necesarios en la deuda, por ejemplo:
+            $deuda->deuda_pendiente += ($gasto->monto - $request->monto);
+            $deuda->save();
+        }
+
+        // Verificar si el gasto está asociado a un ahorro
+        if (!is_null($gasto->ahorro_id)) {
+          
+            // El gasto está asociado a un ahorro, debemos actualizar esa relación
+            $ahorro = Ahorro::findOrFail($gasto->ahorro_id);
+            // Realiza los ajustes necesarios en el ahorro, por ejemplo:
+            $ahorro->recaudado += ($request->monto - $gasto->monto);
             $ahorro->save();
         }
-    
-        if ($deudaIdOriginal !== null) {
-            $deudaOriginal = Deuda::find($deudaIdOriginal);
-            if ($deudaOriginal) {
-                $deudaOriginal->deuda_pendiente += $montoOriginal;
-                $deudaOriginal->save();
-            }
-        }
-    
-        if ($gasto->deuda_id !== null) {
-            $deuda = Deuda::find($gasto->deuda_id);
-            if ($deuda) {
-                $deuda->deuda_pendiente -= $gasto->monto;
-                $deuda->save();
-            }
-        }
-    
+
+        // Resto del código para actualizar los campos del gasto
+        $gasto->desc = $request->desc ? $request->desc : 'gasto';
+        $gasto->monto = $request->monto;
+        $gasto->dia = $request->dia ? $request->dia : $gasto->dia;
+        $gasto->fijar = $request->fijar;
+        $gasto->tipo_gasto = $request->tipo_gasto;
+        $gasto->subtipo_gasto = $request->subtipo_gasto;
+        $gasto->save();
+
         return response()->json([
             'message' => 'Gasto editado'
         ], 200);
+    } else {
+        return response()->json([
+            'message' => 'Gasto no encontrado'
+        ], 404);
     }
-    
+}
 
 
     public function deleteGasto(int $id)
@@ -234,8 +239,9 @@ class GastoController extends Controller
             $ahorro->recaudado -= $gasto->monto;
             $ahorro->save();
         }
-
-        if ($gasto->deuda_id && $gasto->tipo_gasto === 10) {
+ 
+        if ($gasto->tipo_gasto === 10) {
+           
             $deuda = Deuda::find($gasto->deuda_id);
     
             if ($deuda) {
