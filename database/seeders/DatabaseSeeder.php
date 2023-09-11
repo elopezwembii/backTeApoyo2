@@ -349,29 +349,79 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-        \App\Models\Subtipos_gasto::create([
-            'nombre' => 'Casas comerciales',
-            'id' => 101
-        ]);
-        \App\Models\Subtipos_gasto::create([
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Casas comerciales',
+        //     'id' => 101
+        // ]);
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Créditos de consumo',
+        //     'id' => 102
+        // ]);
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Crédito automotriz',
+        //     'id' => 103
+        // ]);
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Tarjeta de crédito',
+        //     'id' => 104
+        // ]);
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Línea de crédito',
+        //     'id' => 105
+        // ]);
+        // \App\Models\Subtipos_gasto::create([
+        //     'nombre' => 'Otros pagos de créditos',
+        //     'id' => 106
+        // ]);
+
+
+        SubtiposGasto::create([
+            'id' => 101,
             'nombre' => 'Créditos de consumo',
-            'id' => 102
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
         ]);
-        \App\Models\Subtipos_gasto::create([
+        
+        SubtiposGasto::create([
+            'id' => 102,
+            'nombre' => 'Crédito hipotecario',
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
+        ]);
+        
+        SubtiposGasto::create([
+            'id' => 103,
+            'nombre' => 'Casas comerciales',
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
+        ]);
+        
+        SubtiposGasto::create([
+            'id' => 104,
             'nombre' => 'Crédito automotriz',
-            'id' => 103
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
         ]);
-        \App\Models\Subtipos_gasto::create([
+        
+        SubtiposGasto::create([
+            'id' => 105,
             'nombre' => 'Tarjeta de crédito',
-            'id' => 104
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
         ]);
-        \App\Models\Subtipos_gasto::create([
+        
+        SubtiposGasto::create([
+            'id' => 106,
             'nombre' => 'Línea de crédito',
-            'id' => 105
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
         ]);
-        \App\Models\Subtipos_gasto::create([
+        
+        SubtiposGasto::create([
+            'id' => 107,
             'nombre' => 'Otros pagos de créditos',
-            'id' => 106
+            'created_at' => '2023-08-21 20:44:58',
+            'updated_at' => '2023-08-21 20:44:58',
         ]);
 
 

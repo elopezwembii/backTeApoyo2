@@ -47,6 +47,7 @@ Route::group([
         Route::post('agregar_gasto', [GastoController::class, 'registerGasto']);
 
         Route::post('agregar_gasto_asociandoAhorro', [GastoController::class, 'registerGastoAsociandoAhorro']);
+        Route::post('agregar_gasto_asociandoDeuda', [GastoController::class, 'registerGastoAsociandoDeuda']);
 
         Route::get('gastos_fijos', [GastoController::class, 'getGastoFijo']);
         Route::get('gastos_variables', [GastoController::class, 'getGastoVariable']);

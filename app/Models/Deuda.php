@@ -31,4 +31,10 @@ class Deuda extends Model
         'id_tipo_deuda'
     ];
 
+
+    public function gastos()
+{
+    return $this->hasMany(Gastos::class, 'deuda_id');
+}
+
 }

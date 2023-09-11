@@ -26,6 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('subtipo_gasto')->nullable();
 
             $table->unsignedBigInteger('ahorro_id')->nullable();
+            $table->unsignedBigInteger('deuda_id')->nullable();
 
             $table->timestamps();
         });

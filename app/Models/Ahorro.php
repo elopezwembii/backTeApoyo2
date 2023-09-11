@@ -30,5 +30,7 @@ class Ahorro extends Model
     return $this->hasMany(Gasto::class, 'ahorro_id');
 }
 
+
+
 }
 

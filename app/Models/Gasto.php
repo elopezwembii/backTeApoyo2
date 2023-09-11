@@ -35,7 +35,8 @@ class Gasto extends Model
         'subtipo_gasto',
         'mes_termino',
         'anio_termino',
-        'ahorro_id'
+        'ahorro_id',
+        'deuda_id',
     ];
 
     public function getSubTipo(){
