@@ -70,7 +70,6 @@ class GastoController extends Controller
         );
     }
 
-
     public function registerGastoAsociandoDeuda(Request $request)
     {
         $request->validate([
@@ -79,16 +78,33 @@ class GastoController extends Controller
             'tipo_gasto' => 'required|numeric',
             'subtipo_gasto' => 'required|numeric',
             'idDeuda' => 'required|numeric',
+            'dia' => 'required|numeric',
+            'mes' => 'required|numeric',
+            'anio' => 'required|numeric',
         ]);
-
+    
+        // Verificar si ya se ha registrado un pago para esta deuda en el mes y año especificados
+        $deuda = Deuda::findOrFail($request->idDeuda);
+        $mes = $request->mes;
+        $anio = $request->anio;
+    
+        $gastoExistente = Gasto::where('deuda_id', $deuda->id)
+            ->whereYear('created_at', $anio)
+            ->whereMonth('created_at', $mes)
+            ->first();
+    
+        if ($gastoExistente) {
+            return response()->json(['message' => 'Ya se ha registrado un pago para esta deuda en el mes y año especificados.'], 400);
+        }
+    
         $user = Auth::user();
     
         $gasto = Gasto::create([
             'desc' => $request->desc ? $request->desc : 'Gasto',
             'monto' => $request->monto,
             'dia' => $request->dia,
-            'mes' => $request->mes,
-            'anio' => $request->anio,
+            'mes' => $mes,
+            'anio' => $anio,
             'fijar' => $request->fijar,
             'id_usuario' => $user->id,
             'tipo_gasto' => $request->tipo_gasto,
@@ -97,8 +113,9 @@ class GastoController extends Controller
         ]);
     
         // Actualizar el monto pendiente de la deuda
-        $deuda = Deuda::findOrFail($request->idDeuda);
-        $deuda->deuda_pendiente -= $request->monto;
+       // $deuda->deuda_pendiente -= $request->monto;
+        $deuda->cuotas_pagadas += 1; // Incrementar las cuotas pagadas
+        $deuda->updated_at = now(); // Actualizar la fecha de actualización
         $deuda->save();
     
         return response()->json(
@@ -188,14 +205,14 @@ class GastoController extends Controller
 
     if ($gasto) {
         // Verificar si el gasto está asociado a una deuda
-        if (!is_null($gasto->deuda_id)) {
+        // if (!is_null($gasto->deuda_id)) {
            
-            // El gasto está asociado a una deuda, debemos actualizar esa relación
-            $deuda = Deuda::findOrFail($gasto->deuda_id);
-            // Realiza los ajustes necesarios en la deuda, por ejemplo:
-            $deuda->deuda_pendiente += ($gasto->monto - $request->monto);
-            $deuda->save();
-        }
+        //     // El gasto está asociado a una deuda, debemos actualizar esa relación
+        //     $deuda = Deuda::findOrFail($gasto->deuda_id);
+        //     // Realiza los ajustes necesarios en la deuda, por ejemplo:
+        //     $deuda->deuda_pendiente += ($gasto->monto - $request->monto);
+        //     $deuda->save();
+        // }
 
         // Verificar si el gasto está asociado a un ahorro
         if (!is_null($gasto->ahorro_id)) {
@@ -242,12 +259,21 @@ class GastoController extends Controller
  
         if ($gasto->tipo_gasto === 10) {
            
-            $deuda = Deuda::find($gasto->deuda_id);
+            // $deuda = Deuda::find($gasto->deuda_id);
     
-            if ($deuda) {
-                $deuda->deuda_pendiente += $gasto->monto;
-                $deuda->save();
+            // if ($deuda) {
+            //     $deuda->deuda_pendiente += $gasto->monto;
+            //     $deuda->save();
+            // }
+            // El gasto está asociado a una deuda, debemos actualizar esa relación
+            $deuda = Deuda::find($gasto->deuda_id);
+            
+            // Descontar 1 de cuotas_pagadas si cuotas_pagadas es mayor a 0
+            if ($deuda->cuotas_pagadas > 0) {
+                $deuda->cuotas_pagadas -= 1;
             }
+           
+            $deuda->save();
         }
 
 
