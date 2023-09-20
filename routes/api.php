@@ -115,6 +115,7 @@ Route::group([
 
 //blogs
 
+Route::get('v1/getFirstSixBlogs', [BlogsController::class, 'getFirstSixBlogs']);
 Route::get('v1/blogs', [BlogsController::class, 'getBlogs']);
 
 Route::post('contacto', [ContactController::class, 'enviarCorreoContacto']);
