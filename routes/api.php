@@ -9,6 +9,7 @@ use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\TarjetaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ContactController;
 use App\Models\Ingreso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,3 +110,6 @@ Route::group([
         return Auth::user();
     })->middleware(['auth:api', 'rutasUsuario']);
 });
+
+Route::post('contacto', [ContactController::class, 'enviarCorreoContacto']);
+
