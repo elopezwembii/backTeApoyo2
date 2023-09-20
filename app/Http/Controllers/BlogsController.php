@@ -10,18 +10,23 @@ class BlogsController extends Controller
     {
         $perPage = $request->input('per_page', 10); // Obtener el número de registros por página desde la solicitud (10 es el valor predeterminado).
         $page = $request->input('page', 1); // Obtener el número de página desde la solicitud (1 es el valor predeterminado).
-
+    
         $blogs = Blog::paginate($perPage, ['*'], 'page', $page);
-
+    
         // Obtener la URL de la página anterior y siguiente (si está disponible).
         $prevPageUrl = $blogs->previousPageUrl();
         $nextPageUrl = $blogs->nextPageUrl();
-
+    
+        // Obtener la URL de la página actual.
+        $currentPageUrl = $request->url() . "?page=" . $page;
+    
         return response()->json([
             'data' => $blogs->items(),
             'prev_page_url' => $prevPageUrl,
             'next_page_url' => $nextPageUrl,
+            'current_page_url' => $currentPageUrl,
             'total' => $blogs->total()
         ]);
     }
+    
 }
