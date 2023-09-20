@@ -9,6 +9,7 @@ use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\TarjetaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BlogsController;
 use App\Models\Ingreso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -109,3 +110,8 @@ Route::group([
         return Auth::user();
     })->middleware(['auth:api', 'rutasUsuario']);
 });
+
+
+//blogs
+
+Route::get('v1/blogs', [BlogsController::class, 'getBlogs']);
