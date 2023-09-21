@@ -10,10 +10,20 @@ use Illuminate\Support\Facades\Log;
 class BlogsController extends Controller
 {
    // Función para obtener los primeros 6 registros de la tabla blogs
-   public function getFirstSixBlogs()
+   public function getFirstSixBlogs(int $id)
    {
-       $firstSixBlogs = Blog::with('categoria') // Cargar la relación 'categoria'
-           ->orderBy('created_at', 'desc') // Ordena por fecha de creación descendente
+       $categoryId = $id;    
+       $firstSixBlogs = Blog::with('categoria')
+           ->when($categoryId, function ($query) use ($categoryId) {
+               if ($categoryId == 1) {
+                   // Si el ID de categoría es 1, obtén todos los blogs sin filtrar por categoría
+                   return $query;
+               } else {
+                   // Si se proporciona un ID de categoría diferente de 1, filtra por ese ID
+                   return $query->where('categoria_id', $categoryId);
+               }
+           })
+           ->orderBy('created_at', 'desc')
            ->limit(6)
            ->get();
    
@@ -22,19 +32,25 @@ class BlogsController extends Controller
        ]);
    }
    
-   
-
-   // Función para obtener los registros a partir del séptimo en adelante
-   public function getBlogs(Request $request)
+   public function getBlogs($id = 1)
    {
-       $perPage = $request->input('per_page', 10);
-       $page = $request->input('page', 1);
+       $perPage = request()->input('per_page', 10);
+       $page = request()->input('page', 1);
    
        // Obtén los IDs de los primeros 6 registros
        $firstSixIds = Blog::limit(6)->pluck('id');
    
        // Utiliza los IDs para obtener los registros restantes, ordenados por fecha de creación descendente.
        $blogs = Blog::whereNotIn('id', $firstSixIds)
+           ->when($id, function ($query) use ($id) {
+               if ($id == 1) {
+                   // Si el ID de categoría es 1, obtén todos los blogs sin filtrar por categoría
+                   return $query;
+               } else {
+                   // Si se proporciona un ID de categoría diferente de 1, filtra por ese ID
+                   return $query->where('categoria_id', $id);
+               }
+           })
            ->with('categoria') // Cargar la relación 'categoria'
            ->orderBy('created_at', 'desc') // Ordenar por fecha de creación descendente
            ->paginate($perPage, ['*'], 'page', $page);
@@ -42,7 +58,7 @@ class BlogsController extends Controller
        $prevPageUrl = $blogs->previousPageUrl();
        $nextPageUrl = $blogs->nextPageUrl();
    
-       $currentPageUrl = $request->url() . "?page=" . $page;
+       $currentPageUrl = url()->current() . "?page=" . $page;
    
        return response()->json([
            'data' => $blogs->items(),
