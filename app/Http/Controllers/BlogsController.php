@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 use App\Models\Blog;
+use App\Models\CategoriaBlog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+
 
 class BlogsController extends Controller
 {
    // Función para obtener los primeros 6 registros de la tabla blogs
    public function getFirstSixBlogs()
    {
-       $firstSixBlogs = Blog::orderBy('created_at', 'desc') // Ordena por fecha de creación descendente
-                       ->limit(6)
-                       ->get();
+       $firstSixBlogs = Blog::with('categoria') // Cargar la relación 'categoria'
+           ->orderBy('created_at', 'desc') // Ordena por fecha de creación descendente
+           ->limit(6)
+           ->get();
    
        return response()->json([
            'data' => $firstSixBlogs
        ]);
    }
+   
    
 
    // Función para obtener los registros a partir del séptimo en adelante
@@ -31,6 +35,7 @@ class BlogsController extends Controller
    
        // Utiliza los IDs para obtener los registros restantes, ordenados por fecha de creación descendente.
        $blogs = Blog::whereNotIn('id', $firstSixIds)
+           ->with('categoria') // Cargar la relación 'categoria'
            ->orderBy('created_at', 'desc') // Ordenar por fecha de creación descendente
            ->paginate($perPage, ['*'], 'page', $page);
    
@@ -58,21 +63,37 @@ class BlogsController extends Controller
            'content' => 'required',
            'imageUrl' => 'required',
            'date' => 'required',
-        ]);      
-   
-        $blog = Blog::create([
-            'title' =>  $request->title,
-            'content' =>  $request->content,
-            'imageUrl' =>  $request->imageUrl,
-            'date' =>  $request->date,
-        ]);
+           'categoria_id' => 'required', // Agrega validación para la categoría
+       ]);
+
+       // Crea el blog con la categoría
+       $blog = Blog::create([
+           'title' => $request->title,
+           'content' => $request->content,
+           'imageUrl' => $request->imageUrl,
+           'date' => $request->date,
+           'categoria_id' => $request->categoria_id, // Asocia el blog con la categoría
+       ]);
 
        // Guarda el blog en la base de datos
-        $blog->save();
+       $blog->save();
+
 
        return response()->json([
-        'message' => 'blogs Creado'
-    ], 200);
+           'message' => 'Blog Creado'
+       ], 200);
    }
+
+
+   
+    public function getCategorias()
+    {
+        $categorias = CategoriaBlog::all();
+
+        return response()->json([
+            'data' => $categorias
+        ]);
+    }
+
     
 }

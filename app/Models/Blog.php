@@ -19,5 +19,10 @@ class Blog extends Model
         'date',
     ];
 
+    public function categoria()
+    {
+        return $this->belongsTo(CategoriaBlog::class);
+    }
+
     // Otras propiedades y métodos del modelo, como relaciones, validaciones, etc.
 }
