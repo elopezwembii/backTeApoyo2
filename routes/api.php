@@ -119,6 +119,8 @@ Route::get('v1/getFirstSixBlogs/{id}', [BlogsController::class, 'getFirstSixBlog
 Route::get('v1/blogs/{id}', [BlogsController::class, 'getBlogs']);
 Route::post('v1/addBlogs', [BlogsController::class, 'crearBlogs']);
 Route::get('v1/categorias', [BlogsController::class, 'getCategorias']);
+Route::get('v1/search', [BlogsController::class, 'searchBlogs']);
+
 
 
 Route::post('contacto', [ContactController::class, 'enviarCorreoContacto']);

@@ -36,12 +36,13 @@ class BlogsController extends Controller
    {
        $perPage = request()->input('per_page', 10);
        $page = request()->input('page', 1);
+       $searchTerm = request()->input('q'); // Obtener el término de búsqueda de la URL
    
        // Obtén los IDs de los primeros 6 registros
        $firstSixIds = Blog::limit(6)->pluck('id');
    
        // Utiliza los IDs para obtener los registros restantes, ordenados por fecha de creación descendente.
-       $blogs = Blog::whereNotIn('id', $firstSixIds)
+       $query = Blog::whereNotIn('id', $firstSixIds)
            ->when($id, function ($query) use ($id) {
                if ($id == 1) {
                    // Si el ID de categoría es 1, obtén todos los blogs sin filtrar por categoría
@@ -52,8 +53,17 @@ class BlogsController extends Controller
                }
            })
            ->with('categoria') // Cargar la relación 'categoria'
-           ->orderBy('created_at', 'desc') // Ordenar por fecha de creación descendente
-           ->paginate($perPage, ['*'], 'page', $page);
+           ->orderBy('created_at', 'desc'); // Ordenar por fecha de creación descendente
+   
+       // Agregar la búsqueda si se proporciona un término de búsqueda
+       if ($searchTerm) {
+           $query->where(function ($subquery) use ($searchTerm) {
+               $subquery->where('title', 'like', '%' . $searchTerm . '%')
+                   ->orWhere('content', 'like', '%' . $searchTerm . '%');
+           });
+       }
+   
+       $blogs = $query->paginate($perPage, ['*'], 'page', $page);
    
        $prevPageUrl = $blogs->previousPageUrl();
        $nextPageUrl = $blogs->nextPageUrl();
@@ -69,8 +79,6 @@ class BlogsController extends Controller
        ]);
    }
    
-   
-
    public function crearBlogs(Request $request)
    {
        // Valida los datos del formulario
@@ -99,9 +107,7 @@ class BlogsController extends Controller
            'message' => 'Blog Creado'
        ], 200);
    }
-
-
-   
+ 
     public function getCategorias()
     {
         $categorias = CategoriaBlog::all();
@@ -110,6 +116,21 @@ class BlogsController extends Controller
             'data' => $categorias
         ]);
     }
+
+    public function searchBlogs(Request $request)
+{
+    $searchTerm = $request->input('q'); // Obtiene los términos de búsqueda del cliente
+
+    // Realiza la búsqueda en la base de datos utilizando los términos de búsqueda
+    $results = Blog::where('title', 'LIKE', "%$searchTerm%")
+                    ->orWhere('content', 'LIKE', "%$searchTerm%")
+                    ->get();
+
+    return response()->json([
+        'data' => $results
+    ]);
+}
+
 
     
 }
