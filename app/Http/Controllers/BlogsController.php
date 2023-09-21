@@ -81,12 +81,12 @@ class BlogsController extends Controller
    
    public function crearBlogs(Request $request)
    {
+    Log::info($request);
        // Valida los datos del formulario
        $request->validate([
            'title' => 'required',
            'content' => 'required',
-           'imageUrl' => 'required',
-           'date' => 'required',
+           'imageUrl' => 'required',         
            'categoria_id' => 'required', // Agrega validación para la categoría
        ]);
 
@@ -94,11 +94,10 @@ class BlogsController extends Controller
        $blog = Blog::create([
            'title' => $request->title,
            'content' => $request->content,
-           'imageUrl' => $request->imageUrl,
-           'date' => $request->date,
+           'imageUrl' => $request->imageUrl,         
            'categoria_id' => $request->categoria_id, // Asocia el blog con la categoría
        ]);
-
+       Log::info($request->categoria_id,);
        // Guarda el blog en la base de datos
        $blog->save();
 

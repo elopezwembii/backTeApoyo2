@@ -16,7 +16,7 @@ class Blog extends Model
         'title',
         'content',
         'imageUrl',
-        'date',
+        'categoria_id'
     ];
 
     public function categoria()
