@@ -81,30 +81,42 @@ class BlogsController extends Controller
    
    public function crearBlogs(Request $request)
    {
-    Log::info($request);
-       // Valida los datos del formulario
-       $request->validate([
-           'title' => 'required',
-           'content' => 'required',
-           'imageUrl' => 'required',         
-           'categoria_id' => 'required', // Agrega validación para la categoría
-       ]);
-
-       // Crea el blog con la categoría
-       $blog = Blog::create([
-           'title' => $request->title,
-           'content' => $request->content,
-           'imageUrl' => $request->imageUrl,         
-           'categoria_id' => $request->categoria_id, // Asocia el blog con la categoría
-       ]);
-       Log::info($request->categoria_id,);
-       // Guarda el blog en la base de datos
-       $blog->save();
-
-
-       return response()->json([
-           'message' => 'Blog Creado'
-       ], 200);
+       try {
+           // Valida los datos del formulario
+           $request->validate([
+               'title' => 'required',
+               'content' => 'required',
+               'imageUrl' => 'required',
+               'categoria_id' => 'required',
+            ]);
+            Log::info($request);
+            // Si se proporciona un ID en la solicitud, actualiza el blog existente
+            if ($request->has('id') && $request->input('id') !== null) {
+                $blog = Blog::findOrFail($request->input('id')); // Encuentra el blog existente
+                $blog->update([
+                    'title' => $request->input('title'),
+                    'content' => $request->input('content'),
+                    'imageUrl' => $request->input('imageUrl'),
+                    'categoria_id' => $request->input('categoria_id'),
+                ]);
+            } else {
+                // Si no se proporciona un ID, crea un nuevo blog
+                $blog = Blog::create([
+                    'title' => $request->input('title'),
+                    'content' => $request->input('content'),
+                    'imageUrl' => $request->input('imageUrl'),
+                    'categoria_id' => $request->input('categoria_id'),
+                ]);
+            }
+           return response()->json([
+               'message' => 'Blog ' . ($request->has('id') ? 'actualizado' : 'creado') . ' con éxito'
+           ], 200);
+       } catch (\Exception $e) {
+           // Manejo de errores en caso de que ocurra una excepción
+           return response()->json([
+               'error' => 'Error al ' . ($request->has('id') ? 'actualizar' : 'crear') . ' el blog: ' . $e->getMessage()
+           ], 500);
+       }
    }
  
     public function getCategorias()
