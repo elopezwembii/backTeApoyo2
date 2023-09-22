@@ -142,6 +142,22 @@ class BlogsController extends Controller
     ]);
 }
 
+public function show($id)
+{
+    // Busca el blog por su ID
+    $blog = Blog::find($id);
+
+    if (!$blog) {
+        return response()->json([
+            'data' => 'No existe blogs con el id='.$id
+        ]);
+    }
+
+    // Devuelve la vista de detalles del blog con el blog encontrado
+    return response()->json([
+        'data' => $blog
+    ]);
+}
 
     
 }
