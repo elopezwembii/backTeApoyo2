@@ -121,6 +121,7 @@ Route::post('v1/addBlogs', [BlogsController::class, 'crearBlogs']);
 Route::get('v1/categorias', [BlogsController::class, 'getCategorias']);
 Route::get('v1/search', [BlogsController::class, 'searchBlogs']);
 Route::get('v1/detalleBlogs/{id}', [BlogsController::class, 'show']);
+Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateDescription']);
 
 
 

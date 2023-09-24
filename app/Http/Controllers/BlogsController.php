@@ -89,7 +89,6 @@ class BlogsController extends Controller
                'imageUrl' => 'required',
                'categoria_id' => 'required',
             ]);
-            Log::info($request);
             // Si se proporciona un ID en la solicitud, actualiza el blog existente
             if ($request->has('id') && $request->input('id') !== null) {
                 $blog = Blog::findOrFail($request->input('id')); // Encuentra el blog existente
@@ -157,6 +156,35 @@ public function show($id)
     return response()->json([
         'data' => $blog
     ]);
+}
+
+public function updateDescription(Request $request, $id)
+{
+    try {
+        $blog = Blog::find($id);
+
+        if (!$blog) {
+            return response()->json([
+                'error' => 'No existe un blog con el ID proporcionado'
+            ], 404);
+        }
+        // Valida los datos del formulario
+        $request->validate([
+            'description' => 'required', // Asegúrate de ajustar las reglas de validación según tus necesidades
+        ]);
+
+        // Actualiza la descripción del blog
+        $blog->description = $request->input('description');
+        $blog->save();
+
+        return response()->json([
+            'message' => 'Descripción del blog actualizada con éxito'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Error al actualizar la descripción del blog: ' . $e->getMessage()
+        ], 500);
+    }
 }
 
     
