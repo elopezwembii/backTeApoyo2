@@ -187,5 +187,32 @@ public function updateDescription(Request $request, $id)
     }
 }
 
+
+public function destroy($id)
+{
+    try {
+        // Encuentra el blog por su ID
+        $blog = Blog::find($id);
+
+        // Verifica si el blog existe
+        if (!$blog) {
+            return response()->json([
+                'error' => 'No existe un blog con el ID proporcionado'
+            ], 404); // Devuelve un error 404 (No encontrado)
+        }
+
+        // Elimina el blog de la base de datos
+        $blog->delete();
+
+        return response()->json([
+            'message' => 'Blog eliminado con éxito'
+        ], 200); // Devuelve una respuesta de éxito con código 200
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Error al eliminar el blog: ' . $e->getMessage()
+        ], 500); // Devuelve un error 500 (Error interno del servidor)
+    }
+}
+
     
 }
