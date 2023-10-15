@@ -40,9 +40,11 @@ class BlogsController extends Controller
    
        // Obtén los IDs de los primeros 6 registros
        $firstSixIds = Blog::limit(6)->pluck('id');
+       
    
        // Utiliza los IDs para obtener los registros restantes, ordenados por fecha de creación descendente.
-       $query = Blog::whereNotIn('id', $firstSixIds)
+       //$query = Blog::whereNotIn('id', $firstSixIds)
+       $query = Blog::query()
            ->when($id, function ($query) use ($id) {
                if ($id == 1) {
                    // Si el ID de categoría es 1, obtén todos los blogs sin filtrar por categoría
