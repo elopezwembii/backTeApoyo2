@@ -37,6 +37,7 @@ class ContactController extends Controller
             // El correo se envió exitosamente, puedes retornar una respuesta de éxito
             return response()->json(['message' => 'Correo enviado con éxito'], 200);
         } catch (\Exception $e) {
+            Log::info($e);
             // Si ocurre un error al enviar el correo, maneja el error
             return response()->json(['error' => 'Error al enviar el correo'], 500);
         }
