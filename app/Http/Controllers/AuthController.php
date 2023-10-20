@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
+
 
 class AuthController extends Controller
 {
@@ -74,5 +76,15 @@ class AuthController extends Controller
             'rol' => $user->roles()->first(),
             'nivel'=>$user->calcularNivel()
         ]);
+    }
+
+    public function requestReset(Request $request) {
+        $request->validate(['email' => 'required|email']);
+    
+        $status = Password::sendResetLink($request->only('email'));
+    
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json(['message' => 'Reset link sent'], 200)
+            : response()->json(['message' => 'Reset link not sent'], 500);
     }
 }

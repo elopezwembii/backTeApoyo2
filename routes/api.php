@@ -33,6 +33,8 @@ Route::group([
     Route::post('registrar', [\App\Http\Controllers\AuthController::class, 'signUp']);
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
 
+    Route::post('sendEmail',[\App\Http\Controllers\AuthController::class, 'requestReset']);
+
     Route::middleware(['auth:api', 'rutasUsuario'])->group(function () {
         //ingresos
         Route::get('get_all_ingresos', [IngresoController::class, 'getAllIngresos']);
@@ -129,4 +131,5 @@ Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateD
 
 
 Route::post('contacto', [ContactController::class, 'enviarCorreoContacto']);
+
 
