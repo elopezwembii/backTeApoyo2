@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\DatabaseBackUp'
+        'App\Console\Commands\DatabaseBackUp',
+'App\Console\Commands\SendMonthlyNotifications'
     ];
 
     /**
@@ -24,12 +25,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('database:backup')->daily();
+       $schedule->command('email:send-monthly-notifications')->everyMinute();
         
-        //$schedule->command('email:test')->everyMinute();
         //$schedule->command('email:send-monthly-notifications')->everyMinute();//monthlyOn(15, '08:00');
-        $schedule->command('email:send-inactive-users')->everyMinute();
-        
+        //$schedule->command('email:test')->everyMinute();
+       // $schedule->command('email:send-inactive-users')->everyMinute();
+
     }
 
     /**
