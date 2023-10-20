@@ -32,7 +32,7 @@ class ContactController extends Controller
 
         try {
             // Enviar el correo utilizando la clase de correo ContactMail
-            Mail::to($request->correo)->send(new ContactMail($data));
+            Mail::to(env("MAIL_FROM_NAME"))->send(new ContactMail($data));
 
             // El correo se envió exitosamente, puedes retornar una respuesta de éxito
             return response()->json(['message' => 'Correo enviado con éxito'], 200);

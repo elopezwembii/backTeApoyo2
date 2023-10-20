@@ -130,6 +130,6 @@ Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateD
 
 
 
-Route::post('contacto', [ContactController::class, 'enviarCorreoContacto']);
+Route::post('v1/contacto', [ContactController::class, 'enviarCorreoContacto']);
 
 
