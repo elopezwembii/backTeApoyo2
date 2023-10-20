@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,8 +14,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\DatabaseBackUp',
-'App\Console\Commands\SendMonthlyNotifications'
+        'App\Console\Commands\DatabaseBackUp'
     ];
 
     /**
@@ -25,12 +25,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-       $schedule->command('email:send-monthly-notifications')->everyMinute();
-        
-        //$schedule->command('email:send-monthly-notifications')->everyMinute();//monthlyOn(15, '08:00');
-        //$schedule->command('email:test')->everyMinute();
-       // $schedule->command('email:send-inactive-users')->everyMinute();
+        // Envia correo cuando los gasto alcanzan a los prepuestos
+        $schedule->command('email:send-monthly-notifications')->when(function () {
+         $today = now()->day;
+         return $today == 1 || $today == 15 || $today == now()->endOfMonth()->day;
+       });
+    
+          // Envía correo para alerta presupuesto 50% 80%
+         $schedule->command('email:test')->daily();
 
+        // Envía correo por inactividad
+         $schedule->command('email:send-inactive-users')->everyMinute();
     }
 
     /**

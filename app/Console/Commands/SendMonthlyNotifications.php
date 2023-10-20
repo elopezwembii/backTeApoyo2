@@ -20,13 +20,12 @@ class SendMonthlyNotifications extends Command
     public function handle()
     {
 
-        $users = User::where('nombres', 'Cesar')->get();
-        Log::info($users);
+       // $users = User::where('nombres', 'Cesar')->get();
 
         $usersAll = User::all();
         $currentDate = now();
 
-        foreach ($users as $user) {
+        foreach ($usersAll as $user) {
             // Verifica si es el principio, mitad o fin de mes
             $dayOfMonth = $currentDate->day;
             $message = 'nada';
@@ -40,7 +39,7 @@ class SendMonthlyNotifications extends Command
             }
 
             // Envía el correo de notificación
-            Mail::to("cesar.troncoso.vergara@gmail.com")->send(new MonthlyNotificationEmail( $user->nombres,$message));//$user->email
+            Mail::to($user->email)->send(new MonthlyNotificationEmail( $user->nombres,$message));//$user->email
             Log::info('Correo de notificación mensual enviado con éxito.');
         }
     }

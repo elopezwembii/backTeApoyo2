@@ -64,12 +64,12 @@
         <p>Si tienes alguna pregunta o necesitas asistencia, puedes contactarnos en: <a href="mailto:info@te-apoyo.cl">info@te-apoyo.cl</a></p>
         <p>Visita nuestro sitio web: <a href="https://www.te-apoyo.cl/">Te Apoyo</a></p>
         <div class="footer-content">
-            <div>
-                <p>Contacto: contacto@te-apoyo.cl</p>
-                <p>Teléfono: +1234567890</p>
-            </div>
+              {{-- <div>
+                <p>Contacto: contacto@te-apoyo.cl</p> 
+               <p>Teléfono: +1234567890</p> 
+            </div> --}}
             <a href="https://www.te-apoyo.cl/">
-                <img src="https://pps.whatsapp.net/v/t61.24694-24/328156052_146312501310235_4239173338662292947_n.jpg?ccb=11-4&oh=01_AdT0PUuSI1eiSEzz3YlmiV617AspYw0dvTG96bDab2El0w&oe=64EA358C&_nc_cat=110" alt="Logo de Te Apoyo" class="footer-logo">
+                <img src="https://www.te-apoyo.cl/assets/images/logo-1.png" alt="Logo de Te Apoyo" class="footer-logo">
             </a>
         </div>
         <div class="signature">
