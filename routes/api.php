@@ -132,4 +132,8 @@ Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateD
 
 Route::post('v1/contacto', [ContactController::class, 'enviarCorreoContacto']);
 
+Route::post('v1/upload', [ContactController::class, 'upload']);
+Route::get('v1/showAll', [ContactController::class, 'showAll']);
+Route::post('v1/deleteImage', [ContactController::class, 'deleteImage']);
+
 
