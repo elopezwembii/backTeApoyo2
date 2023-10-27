@@ -25,14 +25,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Envia correo cuando los gasto alcanzan a los prepuestos
+        // Envia correos al principio, midad y fin de mes de recordatorio
         $schedule->command('email:send-monthly-notifications')->when(function () {
-         $today = now()->day;
+         $today =now()->day;
          return $today == 1 || $today == 15 || $today == now()->endOfMonth()->day;
        });
     
           // Envía correo para alerta presupuesto 50% 80%
-         $schedule->command('email:test')->daily();
+         $schedule->command('email:test')->everyMinute();
 
         // Envía correo por inactividad
          $schedule->command('email:send-inactive-users')->everyMinute();

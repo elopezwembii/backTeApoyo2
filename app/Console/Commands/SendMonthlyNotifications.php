@@ -39,6 +39,7 @@ class SendMonthlyNotifications extends Command
             }
 
             // Envía el correo de notificación
+            Log::info($user->email);
             Mail::to($user->email)->send(new MonthlyNotificationEmail( $user->nombres,$message));//$user->email
             Log::info('Correo de notificación mensual enviado con éxito.');
         }

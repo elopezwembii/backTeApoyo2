@@ -88,6 +88,41 @@ class User extends Authenticatable
         return $this->hasMany(Gasto::class, 'id_usuario');
     }
 
+    public function getGastosActual()
+{
+    $mesActual = now()->month;
+    $anioActual = now()->year;
+    $query = $this->hasMany(Gasto::class, 'id_usuario');
+    
+    if ($mesActual) {
+        $query->where('mes', $mesActual);
+    }
+
+    if ($anioActual) {
+        $query->where('anio', $anioActual);
+    }
+
+    return $query;
+}
+
+public function getPresupuestosActual()
+{
+    $mesActual = now()->month;
+    $anioActual = now()->year;
+    $query = $this->hasMany(Presupuesto::class, 'id_usuario');
+    
+    if ($mesActual) {
+        $query->where('mes', $mesActual);
+    }
+
+    if ($anioActual) {
+        $query->where('anio', $anioActual);
+    }
+
+    return $query;
+}
+
+
     public function getDeudas()
     {
         return $this->hasMany(Deuda::class, 'id_usuario');
