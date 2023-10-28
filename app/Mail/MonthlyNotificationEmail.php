@@ -30,7 +30,7 @@ class MonthlyNotificationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Monthly Notification Email',
+            subject: 'Notificación',
         );
     }
 
