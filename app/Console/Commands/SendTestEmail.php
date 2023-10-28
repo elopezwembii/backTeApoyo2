@@ -51,15 +51,15 @@ class SendTestEmail extends Command
 
             Log::info("porcetaje actual".$porcentajeActual);
             
-            $umbralMinimo = 50; // Puedes ajustar este valor según lo que consideres "cercano al 50%"
-            $umbralMaximo = 80; // Umbral máximo para 80%
+            $umbralMinimo = 51; // Puedes ajustar este valor según lo que consideres "cercano al 50%"
+            $umbralMaximo = 90; // Umbral máximo para 80%
 
             $cacheKey50 = "email_50_percent_sent_{$user->id}";
             $cacheKey80 = "email_80_percent_sent_{$user->id}";
            
             Log::info("c50".Cache::get($cacheKey50));
             Log::info("c80".Cache::get($cacheKey80));
-           
+           Log::info("usuario".$user->email);
 
             if ($porcentajeActual <= $umbralMinimo && $porcentajeActual>=40 && !Cache::get($cacheKey50) ) {//&& !Cache::get($cacheKey50)
                 // Envía el correo ya que los gastos están cerca del 50%
@@ -71,6 +71,7 @@ class SendTestEmail extends Command
                 // Envía el correo ya que los gastos están cerca del 80%
                 $mensaje = 'gastos totales están llegando a 80% del presupuesto';
                 Log::info('entro 80'.$user->email);
+          
                 Cache::put($cacheKey80, true, now()->addDays(3));//Cache::put($cacheKey80, true, now()->endOfMonth());  // El cache expira a fin de mes
                 Mail::to($user->email)->send(new TestEmail($gastosTotal, $itemsTotalPresupuestos, $user->nombres,$mensaje));
             }
