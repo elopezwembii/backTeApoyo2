@@ -64,12 +64,12 @@ class SendTestEmail extends Command
             if ($porcentajeActual <= $umbralMinimo && $porcentajeActual>=40 && !Cache::get($cacheKey50) ) {//&& !Cache::get($cacheKey50)
                 // Envía el correo ya que los gastos están cerca del 50%
                 Log::info('entro mitad'.$user->email);
-                $mensaje = 'gastos totales están llegando a la mitad del presupuesto';
+                $mensaje = 'han sobrepasado el 50%';//
                 Cache::put($cacheKey50, true, now()->addDays(3));//Cache::put($cacheKey50, true, now()->endOfMonth());  // El cache expira a fin de mes
                 Mail::to($user->email)->send(new TestEmail($gastosTotal, $itemsTotalPresupuestos, $user->nombres,$mensaje));
             } elseif ($porcentajeActual > 70 && $porcentajeActual <= $umbralMaximo && !Cache::get($cacheKey80) ) {//&& !Cache::get($cacheKey80)
                 // Envía el correo ya que los gastos están cerca del 80%
-                $mensaje = 'gastos totales están llegando a 80% del presupuesto';
+                $mensaje = 'han sobrepasado el 80%';
                 Log::info('entro 80'.$user->email);
           
                 Cache::put($cacheKey80, true, now()->addDays(3));//Cache::put($cacheKey80, true, now()->endOfMonth());  // El cache expira a fin de mes
