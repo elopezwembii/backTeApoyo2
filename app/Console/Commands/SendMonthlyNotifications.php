@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Mail\MonthlyNotificationEmail; 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class SendMonthlyNotifications extends Command
 {
