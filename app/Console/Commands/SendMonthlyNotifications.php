@@ -20,8 +20,6 @@ class SendMonthlyNotifications extends Command
     public function handle()
     {
 
-       // $users = User::where('nombres', 'Cesar')->get();
-
         $usersAll = User::all();
         $currentDate = now();
 
@@ -37,11 +35,20 @@ class SendMonthlyNotifications extends Command
             } else {
                 $message = 'final del mes';
             }
+            
+
+            $cacheNotification = "email_notification_sent_{$user->id}";
+
+            if(!Cache::get($cacheNotification)){
 
             // Envía el correo de notificación
             Log::info($user->email);
+            Cache::put($cacheNotification, true, now()->addDays(3));
             Mail::to($user->email)->send(new MonthlyNotificationEmail( $user->nombres,$message));//$user->email
             Log::info('Correo de notificación mensual enviado con éxito.');
+
+
+            }
         }
     }
 }
