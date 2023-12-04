@@ -210,6 +210,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        //'MercadoPago' => MercadoPago\SDK::class, //version 2
+        'MercadoPago' => MercadoPago\MercadoPagoConfig::class //version 3
     ])->toArray(),
 
 ];

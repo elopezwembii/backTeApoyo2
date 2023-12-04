@@ -11,6 +11,12 @@ use App\Http\Controllers\TarjetaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\CuponController;
+use App\Http\Controllers\CuponesController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SuscripcionController;
+use App\Http\Controllers\PagosController;
+
 use App\Models\Ingreso;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -32,8 +38,11 @@ Route::group([
 ], function () {
     Route::post('registrar', [\App\Http\Controllers\AuthController::class, 'signUp']);
     Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
-
     Route::post('sendEmail',[\App\Http\Controllers\AuthController::class, 'requestReset']);
+
+    //test de personalidad financiera
+    Route::post('user_test', [\App\Http\Controllers\TestController::class, 'getQuestions']);
+    Route::post('submit_test', [\App\Http\Controllers\TestController::class, 'submitTest']);
 
     Route::middleware(['auth:api', 'rutasUsuario'])->group(function () {
         //ingresos
@@ -107,6 +116,26 @@ Route::group([
         Route::get('empresa', [EmpresaController::class, 'getEmpresas']);
         Route::post('empresa', [EmpresaController::class, 'crearEmpresaYEncargado']);
         Route::get('empresa/{id}', [EmpresaController::class, 'getCantidadColaboradores']);
+
+        //promo cupones
+        Route::post('promo_cupones', [CuponController::class, 'store']);
+        Route::get('cupones', [CuponController::class, 'index']);
+        Route::post('edit_cupones', [CuponController::class, 'update']);
+
+        //planes
+        Route::get('planes', [PlanController::class, 'index']);
+        Route::post('crearPlanes', [PlanController::class, 'crearPlanes']);
+        Route::get('searchplan/{go}', [PlanController::class, 'search']);
+        Route::get('sincronizar/{go}', [PlanController::class, 'sincronizar']);
+        Route::post('eliminar_plan', [PlanController::class, 'destroy']);
+        Route::post('promo_front', [PlanController::class, 'promoUp']);
+
+        //Route::post('addplan', [PlanController::class, 'store']);
+        Route::post('updateplan', [PlanController::class, 'update']);
+
+        //suscriptores
+        Route::get('suscriptores', [SuscripcionController::class, 'index']);
+
     });
 
     Route::get('/user', function (Request $request) {
@@ -114,9 +143,16 @@ Route::group([
     })->middleware(['auth:api', 'rutasUsuario']);
 });
 
+//api pagina web
+/*
+Route::group(['prefix' => 'v1/web'], function () {
+    Route::middleware(['api-token'])->group(function () {
+        Route::post('usar_cupon', [CuponController::class, 'usarCupon']);
+    });
+});*/
+
 
 //blogs
-
 Route::get('v1/getFirstSixBlogs/{id}', [BlogsController::class, 'getFirstSixBlogs']);
 Route::get('v1/blogs/{id}', [BlogsController::class, 'getBlogs']);
 
@@ -129,8 +165,10 @@ Route::get('v1/detalleBlogs/{id}', [BlogsController::class, 'show']);
 Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateDescription']);
 
 
-
+Route::get('v1/plan_all', [PlanController::class, 'planesFron']);
+Route::post('v1/usar_cupon', [CuponController::class, 'usarCupon']);
 Route::post('v1/contacto', [ContactController::class, 'enviarCorreoContacto']);
+Route::post('v1/process_payment', [PagosController::class, 'process']);
 
 Route::post('v1/upload', [ContactController::class, 'upload']);
 Route::get('v1/showAll', [ContactController::class, 'showAll']);
