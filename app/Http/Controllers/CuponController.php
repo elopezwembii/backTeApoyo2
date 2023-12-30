@@ -11,6 +11,16 @@ use App\Models\Persona;
 use App\Models\Suscripcion;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserEmail;
+
+use App\Http\Controllers\PagosController;
+use App\Services\MercadoPagoService;
+use MercadoPago\SDK;
+use MercadoPago;
 
 class CuponController extends Controller
 {
@@ -23,19 +33,108 @@ class CuponController extends Controller
         return response()->json($cupones);
     }
 
+    public function enviarCorreo(Request $request)
+    {
+        $data = [
+            'nombres' => $request->nombres,
+            'apellidos' => $request->apellidos,
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        try {
+            Mail::to(env("MAIL_FROM_NAME"))->send(new UserEmail($data));
+            return true;
+        } catch (\Exception $e) {
+            Log::info($e);
+            return false;
+        }
+    }
+
+    public function registrar(Request $request)
+    {
+        try {
+            
+            if($request->codigo_cupon === "---" && $request->frequency === 0){
+                $user = User::create([
+                    'rut' => $request->rut,
+                    'nombres' => $request->nombres,
+                    'apellidos' => $request->apellidos,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'estado' => 1,
+                    'intentos' => 3,
+                    'primera_guia' => 1,
+                    'id_empresa' => null,
+                ]);
+                $user->roles()->attach(1);
+
+                $pe = Persona::find($request->persons_id);
+                $pe->nombre = $request->nombres;
+                $pe->apellido = $request->apellidos;
+                $pe->status = 1;
+                $pe->save();
+    
+                $request->merge(["email" => $user->email]);
+                //enviar correo
+                $this->enviarCorreo($request);
+
+                $mercadoPagoService = new MercadoPagoService();
+                $pagosController = new PagosController($mercadoPagoService);
+                return $pagosController->process($request);
+
+            }else{
+                $user = User::create([
+                    'rut' => $request->rut,
+                    'nombres' => $request->nombres,
+                    'apellidos' => $request->apellidos,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'estado' => 1,
+                    'intentos' => 3,
+                    'primera_guia' => 1,
+                    'id_empresa' => $request->empresa == -1 ? null : $request->empresa,
+                ]);
+                $user->roles()->attach(1);
+
+                $pe = Persona::find($request->persons_id);
+                $pe->nombre = $request->nombres;
+                $pe->apellido = $request->apellidos;
+                $pe->status = 1;
+                $pe->save();
+    
+                $request->merge(["email" => $user->email]);
+                //enviar correo
+                $this->enviarCorreo($request);
+
+                return $this->usarCupon($request);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Hubo un problema al registrar el usuario: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
     /**
      * Display a listing of the resource.
      */
     public function usarCupon(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'codigo_cupon' => ['required','string'],
         ]);
-    
-        $validator->sometimes('email', 'required|email', function ($input) {
-            return !Persona::where('email', $input->email)->exists();
-        });
+        
+        /*
+        $return = User::where('email', $request->email)->exists();
+        if(!$return){
+            return response()->json([
+                'code' => 400,
+                'message' => "Bat Request"
+            ]);  
+        }*/
     
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
@@ -66,6 +165,8 @@ class CuponController extends Controller
         $persona = Persona::where('email', $request->email)->first();
         if (!$persona) {
             $persona = new Persona;
+            $persona->nombre = $request->nombres;
+            $persona->apellido = $request->apellidos;
             $persona->email = $request->email;
             $persona->tipo_usuario = $cupon->tipo;
             $persona->empresa = ($cupon->empresa != null)?$cupon->empresa->nombre:"S/E";
@@ -87,7 +188,8 @@ class CuponController extends Controller
             'planSuscripcion' => $cupon,
             'email' => $request->email,
             'tipo_usuario' => $cupon->tipo,
-            'empresa' => ($cupon->empresa != null)?$cupon->empresa->nombre:"S/E"
+            'empresa' => ($cupon->empresa != null)?$cupon->empresa->nombre:"S/E",
+            'person_id' => $persona->id
         ], 200);
 
         /*

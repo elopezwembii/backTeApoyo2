@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('tipo_usuario', ['individual', 'empresarial'])->default('individual');
             $table->string('empresa')->nullable();
             $table->string('api_token')->nullable();
+            $table->unsignedBigInteger('status')->default(0)->nullable();
             $table->timestamps();
         });
     }

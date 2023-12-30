@@ -19,7 +19,8 @@ class Persona extends Model
         'email', 
         'tipo_usuario', 
         'empresa',
-        'api_token'
+        'api_token',
+        'status'
     ];
 
     public function suscripciones()

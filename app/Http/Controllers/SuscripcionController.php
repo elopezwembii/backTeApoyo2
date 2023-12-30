@@ -15,7 +15,7 @@ class SuscripcionController extends Controller
     {
         //$resp = Suscripcion::with(['persona:email', 'plan:nombre', 'cupon:codigo'])->get();
         $resp = DB::table('suscripciones as s')
-                ->select('s.*', 'p.email', 'pl.reason', 'pl.cupon', 'pl.tipo')
+                ->select('s.*', 'p.nombre', 'p.apellido', 'p.email', 'p.status', 'pl.reason', 'pl.cupon', 'pl.tipo')
                 ->join('personas as p', 's.personas_id', 'p.id')
                 ->join('planes as pl', 's.planes_id', 'pl.id')
                 ->get();

@@ -167,6 +167,7 @@ Route::put('v1/blogs/{id}/update-description', [BlogsController::class, 'updateD
 
 Route::get('v1/plan_all', [PlanController::class, 'planesFron']);
 Route::post('v1/usar_cupon', [CuponController::class, 'usarCupon']);
+Route::post('v1/registrarUs', [CuponController::class, 'registrar']);
 Route::post('v1/contacto', [ContactController::class, 'enviarCorreoContacto']);
 Route::post('v1/process_payment', [PagosController::class, 'process']);
 

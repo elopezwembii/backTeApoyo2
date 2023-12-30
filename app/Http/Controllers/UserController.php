@@ -41,7 +41,6 @@ class UserController extends Controller
     public function agregarUsuario(Request $request)
     {   
       
-
         $request->validate([
             'email' => 'string|email',
         ]);
