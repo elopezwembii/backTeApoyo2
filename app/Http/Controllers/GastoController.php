@@ -287,35 +287,51 @@ class GastoController extends Controller
     {
         $respuesta = [];
         $gastos = Gasto::where([['id_usuario', Auth::user()->id], ['fijar', true]])->with("getSubTipo")->get();
-        foreach ($gastos as $gasto) {
-            if ($gasto->mes_termino == null) {
-                if ($gasto->anio < $request->anio) {
-                    array_push($respuesta, $gasto);
-                } elseif ($gasto->anio == $request->anio) {
-                    if ($gasto->mes <= $request->mes) {
+    
+        // Agrupar los gastos por getSubTipo
+        $gastosAgrupados = $gastos->groupBy('getSubTipo.id');
+    
+        foreach ($gastosAgrupados as $subTipoId => $gastosPorSubTipo) {
+            $montoTotal = 0;
+    
+            foreach ($gastosPorSubTipo as $gasto) {
+                if ($gasto->mes_termino == null) {
+                    if ($gasto->anio < $request->anio) {
                         array_push($respuesta, $gasto);
-                    }
-                }
-            } else {
-                if ($gasto->anio < $request->anio) {
-                    if ($gasto->anio_termino >= $request->anio) {
-                        array_push($respuesta, $gasto);
-                    }
-                } elseif ($gasto->anio == $request->anio) {
-                    if ($gasto->mes <= $request->mes) {
-                        if ($gasto->mes_termino >= $request->mes) {
+                    } elseif ($gasto->anio == $request->anio) {
+                        if ($gasto->mes <= $request->mes) {
                             array_push($respuesta, $gasto);
                         }
                     }
+                } else {
+                    if ($gasto->anio < $request->anio) {
+                        if ($gasto->anio_termino >= $request->anio) {
+                            array_push($respuesta, $gasto);
+                        }
+                    } elseif ($gasto->anio == $request->anio) {
+                        if ($gasto->mes <= $request->mes) {
+                            if ($gasto->mes_termino >= $request->mes) {
+                                array_push($respuesta, $gasto);
+                            }
+                        }
+                    }
                 }
+    
+                // Sumar el monto
+                $montoTotal += $gasto->monto;
             }
+    
+            // Crear un nuevo objeto con la suma total
+            $gastoSumado = $gastosPorSubTipo->first();
+            $gastoSumado->monto = $montoTotal;
+    
+            // Agregar el objeto sumado al array de respuesta
+            array_push($respuesta, $gastoSumado);
         }
-        return response()->json(
-            $respuesta,
-            200
-        );
+    
+        return response()->json($respuesta, 200);
     }
-
+    
     public function getGastoVariable(Request $request)
     {
         $ingresos = Gasto::where([['id_usuario', Auth::user()->id], ['mes', $request->mes], ['anio', $request->anio], ['fijar', false]])
