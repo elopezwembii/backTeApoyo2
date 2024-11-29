@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->date('suscripcion_inicio')->nullable();
             $table->date('suscripcion_fin')->nullable();
+            $table->string('suscripcion_nombre')->nullable();
 
             $table->date('last_login_at')->nullable();
 

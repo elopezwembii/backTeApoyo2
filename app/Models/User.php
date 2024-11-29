@@ -44,6 +44,7 @@ class User extends Authenticatable
         'perfil_financiero',
         'suscripcion_inicio',
         'suscripcion_fin',
+        'suscripcion_nombre',
         'primera_guia',
         'id_empresa',
     ];
@@ -93,7 +94,7 @@ class User extends Authenticatable
     $mesActual = now()->month;
     $anioActual = now()->year;
     $query = $this->hasMany(Gasto::class, 'id_usuario');
-    
+
     if ($mesActual) {
         $query->where('mes', $mesActual);
     }
@@ -110,7 +111,7 @@ public function getPresupuestosActual()
     $mesActual = now()->month;
     $anioActual = now()->year;
     $query = $this->hasMany(Presupuesto::class, 'id_usuario');
-    
+
     if ($mesActual) {
         $query->where('mes', $mesActual);
     }
@@ -149,7 +150,7 @@ public function getPresupuestosActual()
     public function calcularNivel()
     {
         $numAreasLlenas = 0;
-    
+
         if ($this->getIngresos()->count() > 0) {
             $numAreasLlenas++;
         }
@@ -168,7 +169,7 @@ public function getPresupuestosActual()
         if ($this->getGastos()->count() > 0) {
             $numAreasLlenas++;
         }
-    
+
         $niveles = [
             0 => 'Novato Financiero',
             1 => 'Money Rookie',
@@ -177,7 +178,7 @@ public function getPresupuestosActual()
             4 => 'Expert Saver',
             5 => 'Money Wizard',
         ];
-    
+
         $imagenesPorNivel = [
             'Novato Financiero' => 'https://cdn-icons-png.flaticon.com/512/3830/3830723.png',
             'Money Rookie' => 'https://cdn-icons-png.flaticon.com/512/2695/2695370.png',
@@ -186,20 +187,20 @@ public function getPresupuestosActual()
             'Expert Saver' => 'https://cdn-icons-png.flaticon.com/512/1141/1141454.png',
             'Money Wizard' => 'https://cdn-icons-png.flaticon.com/512/2579/2579276.png',
         ];
-    
+
         $nivelActual = $niveles[$numAreasLlenas];
         $imagenURL = $imagenesPorNivel[$nivelActual];
-    
+
         // Calcular el siguiente nivel
         $siguienteNivel = isset($niveles[$numAreasLlenas + 1]) ? $niveles[$numAreasLlenas + 1] : null;
-    
+
         return [
             'nivel_actual' => $nivelActual,
             'imagen_url_actual' => $imagenURL,
             'siguiente_nivel' => $siguienteNivel
              ];
     }
-    
-    
-    
+
+
+
 }
