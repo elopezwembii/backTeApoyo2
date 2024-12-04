@@ -15,20 +15,25 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],  // Asegúrate de que las rutas correctas estén incluidas
 
-    'allowed_methods' => ['*'],
+    'allowed_methods' => ['*'],  // Permitir todos los métodos HTTP
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'https://te-apoyo.cl',  // Agregar comilla de cierre correctamente
+        'https://app.te-apoyo.cl',  // Agregar comilla de cierre correctamente
+        'https://api-v2.te-apoyo.cl',
+        'https://api-php.te-apoyo.cl',
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [],  // Deja vacío si no necesitas patrones específicos
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['*'],  // Permitir todos los encabezados
 
-    'exposed_headers' => [],
+    'exposed_headers' => [],  // Si necesitas exponer encabezados, agrégalos aquí
 
-    'max_age' => 0,
+    'max_age' => 0,  // Sin caché de solicitudes preflight
 
-    'supports_credentials' => true,
+    'supports_credentials' => true,  // Habilitar soporte para credenciales (como cookies)
 
 ];
