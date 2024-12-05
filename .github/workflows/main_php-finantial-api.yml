@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy PHP app to Azure Web App - php-finantial-api
 
 on:
@@ -16,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP
+      - name: Setup PHP 8.2
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
@@ -29,7 +26,10 @@ jobs:
 
       - name: Run composer install if composer.json exists
         if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --optimize-autoloader --no-dev
+        run: |
+          composer self-update
+          composer validate --no-check-publish
+          composer install --optimize-autoloader --no-dev
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -47,7 +47,7 @@ jobs:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
+      id-token: write  #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -64,10 +64,7 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B339F296AC6647F2B33209D720D37A07 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D72B768BC6E545EF82F22D0C1B7C2849 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B95252E443874789AD1153E3E630D0A3 }}
-      - name: Upgrade composer
-        run: composer self-update
-      - name: Run Artisan commands after deployment
-        run: php artisan serve
+
       - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
@@ -75,3 +72,8 @@ jobs:
           app-name: "php-finantial-api"
           slot-name: "Production"
           package: .
+
+      # Esta línea es innecesaria en producción ya que el servidor web (NGINX o Apache) debería manejar las solicitudes.
+      # Eliminarla es una buena práctica:
+      # - name: Run Artisan commands after deployment
+      #   run: php artisan serve
