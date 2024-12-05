@@ -66,12 +66,14 @@ jobs:
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B95252E443874789AD1153E3E630D0A3 }}
       - name: Run Artisan commands after deployment
         run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+          sudo apt-get install php8.2-cli php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-mysql
+          php artisan migrate --force
+          php artisan db:seed --force
           php artisan config:cache
           php artisan route:cache
-          php artisan migrate --force
-          php artisan passport:install
-          php artisan db:seed --force
-          php artisan key:generate
+          php artisan optimize
+          php artisan key:generate --force
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
