@@ -64,6 +64,8 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B339F296AC6647F2B33209D720D37A07 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D72B768BC6E545EF82F22D0C1B7C2849 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B95252E443874789AD1153E3E630D0A3 }}
+      - name: Upgrade composer
+        run: composer self-update
       - name: Run Artisan commands after deployment
         run: php artisan serve
       - name: "Deploy to Azure Web App"
