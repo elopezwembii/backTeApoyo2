@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy PHP app to Azure Web App - php-finantial-api
+name: Build and deploy Laravel API to Azure Web App - php-finantial-api
 
 on:
   push:
@@ -21,6 +21,11 @@ jobs:
         with:
           php-version: '8.2'
 
+      - name: Install Composer dependencies
+        run: |
+          curl -sS https://getcomposer.org/installer | php
+          php composer.phar install --prefer-dist --no-progress --no-scripts
+
       - name: Check if composer.json exists
         id: check_files
         uses: andstor/file-existence-action@v1
@@ -29,7 +34,7 @@ jobs:
 
       - name: Run composer install if composer.json exists
         if: steps.check_files.outputs.files_exists == 'true'
-        run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+        run: composer install --prefer-dist --no-progress --no-scripts
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -57,7 +62,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -65,11 +70,30 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D72B768BC6E545EF82F22D0C1B7C2849 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B95252E443874789AD1153E3E630D0A3 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
           app-name: 'php-finantial-api'
           slot-name: 'Production'
           package: .
-          
+
+      # Run Laravel migrations after deployment
+      - name: Run Laravel migrations
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AZURE_SSH_PRIVATE_KEY }} azureuser@${{ secrets.AZURE_APP_URL }} << EOF
+          cd /home/azureuser/php-finantial-api
+          php artisan migrate --force
+          php artisan passport:install --force
+          EOF
+
+      # Clear Laravel cache (optional but recommended)
+      - name: Clear Laravel cache
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.AZURE_SSH_PRIVATE_KEY }} azureuser@${{ secrets.AZURE_APP_URL }} << EOF
+          cd /home/azureuser/php-finantial-api
+          php artisan config:clear
+          php artisan route:clear
+          php artisan cache:clear
+          EOF
+
