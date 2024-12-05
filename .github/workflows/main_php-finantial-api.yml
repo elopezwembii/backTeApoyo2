@@ -1,3 +1,6 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
 name: Build and deploy PHP app to Azure Web App - php-finantial-api
 
 on:
@@ -44,7 +47,7 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # This is required for requesting the JWT
+      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -58,9 +61,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B339F296AC6647F2B33209D720D37A07 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_D72B768BC6E545EF82F22D0C1B7C2849 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B95252E443874789AD1153E3E630D0A3 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -70,25 +73,3 @@ jobs:
           slot-name: 'Production'
           package: .
 
-      - name: Run Artisan commands after deployment
-        run: |
-          echo "Running artisan commands..."
-
-          # Ensure correct configuration and cache
-          php artisan config:cache
-          php artisan route:cache
-
-          # Run migrations (force for production environment)
-          php artisan migrate --force
-
-          # Install Laravel Passport (only if not already installed in your environment)
-          php artisan passport:install
-
-          # Seed the database (use --force in production)
-          php artisan db:seed --force
-
-          # Generate the application key (optional, only if not already set)
-          php artisan key:generate
-        env:
-          APP_KEY: ${{ secrets.APP_KEY }} # Ensure this is stored in your GitHub secrets
-          DB_CONNECTION: ${{ secrets.DB_CONNECTION }} # Optional: for the database connection
