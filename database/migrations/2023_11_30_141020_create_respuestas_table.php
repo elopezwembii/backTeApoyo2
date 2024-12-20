@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,10 +12,9 @@ return new class extends Migration
     {
         Schema::create('respuestas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pregunta_id')->constrained();
+            $table->foreignId('pregunta_id')->constrained(); // Se asume que existe una tabla "preguntas"
             $table->string('respuesta');
-            $table->string('personalidad_tipo');
-            $table->foreignId('personalidad_tipo_id')->constrained();
+            $table->foreignId('personalidad_tipo_id')->constrained('personalidad_tipos'); // Referencia corregida
             $table->timestamps();
         });
     }
