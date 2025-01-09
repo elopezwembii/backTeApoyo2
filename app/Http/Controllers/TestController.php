@@ -44,21 +44,22 @@ class TestController extends Controller
 
     public function submitTest(Request $request)
     {
-    
         $respuestas = $request->all();
         $user = null;
+
         foreach ($respuestas as $id => $value) {
-            $userTest = UserTest::create(
-                [
-                    'preusers_id' => $value['preusers_id'],
-                    'pregunta_id' => $value['pregunta_id'],
-                    'respuesta_id' => $value['respuesta_id']
-                ]
-            );
+            $userTest = UserTest::create([
+                'preusers_id' => $value['preusers_id'],
+                'pregunta_id' => $value['pregunta_id'],
+                'respuesta_id' => $value['respuesta_id'],
+            ]);
             $user = $userTest->preusers_id;
         }
-        
-        $userTests = UserTest::with('respuesta.personalidadTipo')->where('preusers_id', $user)->get();
+
+        $userTests = UserTest::with('respuesta.personalidadTipo')
+            ->where('preusers_id', $user)
+            ->get();
+
         $personalidadCount = [];
 
         foreach ($userTests as $userTest) {
@@ -69,18 +70,33 @@ class TestController extends Controller
                 $personalidadCount[$personalidadTipoId] = 1;
             }
         }
-        
+
+        if (empty($personalidadCount)) {
+            return response()->json([
+                'error' => 'No se pudieron determinar los datos de personalidad.',
+            ], 400);
+        }
+
         $maxCount = max($personalidadCount);
         $personalidadTipoId = array_search($maxCount, $personalidadCount);
-        
+
         $personalidad = PersonalidadTipo::find($personalidadTipoId);
 
+        if (!$personalidad) {
+            return response()->json([
+                'error' => 'No se encontró información de personalidad.',
+            ], 400);
+        }
+
         $userPre = Preuser::find($user);
-        $this->enviarCorreoTest($userPre->email, $personalidad->descripcion);
-        
+        if ($userPre) {
+            $this->enviarCorreoTest($userPre->email, $personalidad->descripcion);
+        }
+
         return response()->json([
             'personalidad' => $personalidad->descripcion,
-            'definicion' => $personalidad->definicion
+            'definicion' => $personalidad->definicion,
         ]);
     }
+
 }
